@@ -1,0 +1,112 @@
+{
+  "version": "0.1.0",
+  "name": "lancepoint",
+  "instructions": [
+    {
+      "name": "applyToJob",
+      "accounts": [
+        { "name": "application", "isMut": true, "isSigner": false },
+        { "name": "applicant", "isMut": true, "isSigner": true },
+        { "name": "jobPost", "isMut": false, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [{ "name": "resumeLink", "type": "string" }]
+    },
+    {
+      "name": "approveApplication",
+      "accounts": [
+        { "name": "application", "isMut": true, "isSigner": false },
+        { "name": "jobPost", "isMut": true, "isSigner": false },
+        { "name": "client", "isMut": true, "isSigner": true }
+      ],
+      "args": []
+    },
+    {
+      "name": "approveSubmission",
+      "accounts": [
+        { "name": "application", "isMut": true, "isSigner": false },
+        { "name": "jobPost", "isMut": true, "isSigner": false },
+        { "name": "escrow", "isMut": true, "isSigner": false },
+        { "name": "client", "isMut": true, "isSigner": true },
+        { "name": "freelancer", "isMut": true, "isSigner": false },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": []
+    },
+    {
+      "name": "initializeJobPost",
+      "accounts": [
+        { "name": "jobPost", "isMut": true, "isSigner": false },
+        { "name": "escrow", "isMut": true, "isSigner": false },
+        { "name": "client", "isMut": true, "isSigner": true },
+        { "name": "systemProgram", "isMut": false, "isSigner": false }
+      ],
+      "args": [
+        { "name": "title", "type": "string" },
+        { "name": "description", "type": "string" },
+        { "name": "amount", "type": "u64" }
+      ]
+    },
+    {
+      "name": "submitWork",
+      "accounts": [
+        { "name": "application", "isMut": true, "isSigner": false },
+        { "name": "freelancer", "isMut": true, "isSigner": true },
+        { "name": "jobPost", "isMut": false, "isSigner": false }
+      ],
+      "args": [{ "name": "submissionLink", "type": "string" }]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Application",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "applicant", "type": "publicKey" },
+          { "name": "jobPost", "type": "publicKey" },
+          { "name": "resumeLink", "type": "string" },
+          { "name": "approved", "type": "bool" },
+          { "name": "completed", "type": "bool" },
+          { "name": "submissionLink", "type": "string" }
+        ]
+      }
+    },
+    {
+      "name": "JobPost",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          { "name": "client", "type": "publicKey" },
+          { "name": "title", "type": "string" },
+          { "name": "amount", "type": "u64" },
+          { "name": "description", "type": "string" },
+          { "name": "isFilled", "type": "bool" },
+          { "name": "escrowBump", "type": "u8" }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "You are not authorized to perform this action"
+    },
+    {
+      "code": 6001,
+      "name": "JobAlreadyFilled",
+      "msg": "This job has already been filled"
+    },
+    {
+      "code": 6002,
+      "name": "ApplicationNotApproved",
+      "msg": "Application has not been approved yet"
+    },
+    {
+      "code": 6003,
+      "name": "WorkNotCompleted",
+      "msg": "Work has not been completed yet"
+    }
+  ]
+}
